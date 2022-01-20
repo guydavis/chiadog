@@ -18,7 +18,6 @@ helps with automated monitoring and sends you a mobile notification in case some
 | ------------- | ------------- | ------|
 | Harvester | Your harvester appears to be offline! No events for the past 400 seconds. | HIGH |
 | Harvester | Disconnected HDD? The total plot count decreased from 100 to 40. | HIGH |
-| Harvester | Connected HDD? The total plot count increased from 0 to 42. | LOW |
 | Harvester | Experiencing networking issues? Harvester did not participate in any challenge for 120 seconds. It's now working again. | NORMAL |
 | Harvester | Seeking plots took too long: 21.42 seconds! | NORMAL |
 | Full Node | Experiencing networking issues? Skipped 42 signage points! | NORMAL |
@@ -50,7 +49,6 @@ You may use one (or more) of the following integrations to receive notifications
 | Integration | Advantages | Cost |
 | ------------- | ------------- | ------|
 | [Pushover](https://pushover.net/) | High priority notifications that can override your phone's silent mode. | $5 one time purchase after 30 day trial. |
-| [Pushcut](https://pushcut.io/) | Alternative to Pushover |
 | E-mail | You probably already have an email. No additional apps. | Free |
 | Slack | Quick & easy setup. | Free |
 | Discord | Quick & easy setup. | Free |
@@ -58,8 +56,6 @@ You may use one (or more) of the following integrations to receive notifications
 | Shell script (beta) | Execute anything in your own script. | Free |
 | MQTT | Well-suited for Home Automation. | Free | 
 | Grafana | For hardware monitoring. | Free |
-| [Ifttt](https://ifttt.com/) | Can be used to send push notifications or to do other API integrations depending on incoming data. | Free |
-
 
 For detailed guide on how to test and configure, please refer to [INTEGRATIONS.md](INTEGRATIONS.md).
 
@@ -196,41 +192,16 @@ nohup python3 -u main.py --config config.yaml > output.log 2>&1 &
 To stop chiadog, you can find the Process ID (PID) via `ps aux | grep main.py` and then softly interrupt the process
 with `kill -SIGINT <pid_here>`.
 
-You can also run chiadog as a sandboxed systemd service.
-
 ## Running `chiadog` in sandboxed environment
 
-We're still exploring the best way to provide easy to setup sandboxed environment where the `chiadog` process is
-completely isolated from potentially accessing your private keys. Contributions in that direction are very welcome.
+We're in the early stages of exploring the best way to provide easy to setup sandboxed environment where the `chiadog`
+process is completely isolated from potentially accessing your private keys. Contributions in that direction are very
+welcome. Meanwhile you can check out @ajacobson repository
+for [chiadog-docker](https://github.com/ajacobson/chiadog-docker).
 
-## Running `chiadog` against a blockchain fork
+Alternatively, [as suggested here](https://github.com/martomi/chiadog/issues/24) you can run `chiadog` from a unix user
+with limited permissions.
 
-Despite the name, it's possible to monitor [blockchain forks](https://xchforks.com/), such as Flax, N-Chain, Chives, HDDCoin, Flora, and others.  In the [config.yml](config.yml), change the following:
-* coin_name: 'chia' --> A lower-cased string of the coin's name.
-* coin_symbol: 'xch' --> A lower-cased string of the coin's symbol, often 3-letters long.
-
-Then in the next section, set the log line prefix used for matching into the blockchain's debug.log:
-```
-chia_logs:
-  file_log_consumer:
-     ...
-     prefix: 'chia'
-     ...
-```
-While the Chia blockchain's logline prefix is 'chia', Flax's is 'flax', etc, some chains are different:
-* N-Chain: 'chia' -> They never bothered to change it.
-* Flora: prefix: 'flora_proxy: chia'  -> They added 'flora_proxy: ' instead.
-
-*DISCLAIMER*: As every blockchain fork is different from the main Chia blockchain, often to differing amounts, there is no guarantee every single fork can be monitored by Chiadog.  Raise an [issue](https://github.com/martomi/chiadog/issues) for problems with a particular fork.
-
-## Running `chiadog` using systemd
-
-* There is an example [systemd service](scripts/linux/chiadog.service) you can configure which runs chiadog as a limited
-user and blocks access to key chia locations.
-* Alternatively, [as suggested here](https://github.com/martomi/chiadog/issues/24) you can run `chiadog` from a unix
-user with limited permissions.
-* For running in docker, you can check out @ajacobson repository for
-[chiadog-docker](https://github.com/ajacobson/chiadog-docker).
 # Contributing
 
 Contributions are always welcome! Please refer to [CONTRIBUTING](CONTRIBUTING.md) documentation.
