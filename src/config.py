@@ -51,7 +51,7 @@ class Config:
 
     @staticmethod
     def get_log_offset_path() -> Path:
-        return Path("debug.log.offset")
+        return Path("/root/.chia/chiadog/logs/debug.log.offset")
 
 
 def check_keys(required_keys, config) -> bool:
