@@ -36,6 +36,12 @@ class Config:
 
     def get_log_level_config(self):
         return self._get_child_config("log_level")
+    
+    def get_coin_name(self):
+        return self._config.get("coin_name", "chia")
+    
+    def get_coin_symbol(self):
+        return self._config.get("coin_symbol", "xch")
 
     def get_keep_alive_monitor_config(self):
         return self._get_child_config("keep_alive_monitor", required=False)
@@ -45,7 +51,7 @@ class Config:
 
     @staticmethod
     def get_log_offset_path() -> Path:
-        return Path("debug.log.offset")
+        return Path("/root/.chia/chiadog/logs/debug.log.offset")
 
 
 def check_keys(required_keys, config) -> bool:

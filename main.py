@@ -53,15 +53,9 @@ def init(config:Config):
 
     logging.info(f"Starting Chiadog ({version()})")
 
-    # Remove the Pygtail offset file if it exists
-    # Fixes a bug where hard reboot corrupts the offset file
-    offset = Config.get_log_offset_path()
-    if offset.exists():
-        offset.unlink()
-
     # Create log consumer based on provided configuration
     chia_logs_config = config.get_chia_logs_config()
-    log_consumer = create_log_consumer_from_config(chia_logs_config)
+    log_consumer = create_log_consumer_from_config(chia_logs_config, config.get_coin_name(), config.get_coin_symbol())
     if log_consumer is None:
         exit(0)
 
@@ -73,7 +67,8 @@ def init(config:Config):
     notify_manager = NotifyManager(config=config, keep_alive_monitor=keep_alive_monitor)
 
     # Stats manager accumulates stats over 24 hours and sends a summary each day
-    stats_manager = StatsManager(config=config.get_daily_stats_config(), notify_manager=notify_manager)
+    stats_manager = StatsManager(config=config.get_daily_stats_config(), notify_manager=notify_manager, 
+        symbol=config.get_coin_symbol())
 
     # Link stuff up in the log handler
     # Pipeline: Consume -> Handle -> Notify

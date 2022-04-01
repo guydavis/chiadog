@@ -5,6 +5,8 @@
 # instances monitoring multiple harvesters
 notification_title_prefix: 'Chia'
 log_level: INFO
+coin_name: 'chia'
+coin_symbol: 'xch'
 
 # Only one consumer can be enabled at a time, you can
 # delete the section for the consumer which you aren't using
@@ -12,6 +14,7 @@ log_level: INFO
 chia_logs:
   file_log_consumer:
     enable: true
+    prefix: 'chia'
     file_path: '~/.chia/mainnet/log/debug.log'
   network_log_consumer:
     enable: false
@@ -44,6 +47,17 @@ notifier:
     enable: false
     daily_stats: true
     wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
+    credentials:
+      api_token: 'dummy_token'
+      user_key: 'dummy_key'
+  pushcut:
+    enable: false
+    daily_stats: true
+    wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
     credentials:
       api_token: 'dummy_token'
       user_key: 'dummy_key'
@@ -51,6 +65,8 @@ notifier:
     enable: false
     daily_stats: true
     wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
     credentials:
       bot_token: 'dummy_bot_token'
       chat_id: 'dummy_chat_id'
@@ -58,35 +74,46 @@ notifier:
     enable: false
     daily_stats: true
     wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
     credentials:
       sender: 'chia@example.com'
       sender_name: 'chiadog'
       recipient: 'you@example.com'
       username_smtp: 'username'
       password_smtp: 'password'
+      enable_smtp_auth: true
       host: 'smtp.example.com'
       port: 587
   script:
     enable: false
     daily_stats: true
     wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
     script_path: 'tests/test_script.sh'
   discord:
     enable: false
     daily_stats: true
     wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
     credentials:
       webhook_url: 'https://discord.com/api/webhooks/...'
   slack:
     enable: false
     daily_stats: true
     wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
     credentials:
       webhook_url: 'https://hooks.slack.com/services/...'
   mqtt:
     enable: false
     daily_stats: true
     wallet_events: true
+    decreasing_plot_events: true
+    increasing_plot_events: false
     topic: chia/chiadog/alert
     qos: 1
     retain: false
@@ -102,3 +129,12 @@ notifier:
       api_token: ''
       dashboard_id: -1
       panel_id: -1
+  ifttt:
+    enable: false
+    daily_stats: false
+    wallet_events: false
+    decreasing_plot_events: true
+    increasing_plot_events: false
+    credentials:
+      api_token: 'dummy_token'
+      webhook_name: 'dummy_key'
