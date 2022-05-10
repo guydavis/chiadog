@@ -1,10 +1,15 @@
 """Notifier package responsible for user notification
 
 """
+import json
+import logging
+import re
+import traceback
 
 # std
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from json_logic import jsonLogic
 from typing import List
 from enum import Enum
 
@@ -91,6 +96,37 @@ class Notifier(ABC):
             icon = "ℹ️"
 
         return f"{icon} {self._title_prefix} {event.service.name}"
+
+    def should_ignore_event(self, event):
+        if not "ignore" in self._config:
+            return False 
+        ignore = self._config["ignore"]
+        try:
+            if 'type' in ignore and ignore['type'] == event.type.name:
+                return True
+            if 'priority' in ignore and ignore['priority'] == event.priority.name:
+                return True
+            if 'service' in ignore and ignore['service'] == event.service.name:
+                return True
+            if 'message' in ignore and re.search(ignore['message'], event.message, re.M|re.I):
+                return True
+            if 'compound' in ignore:
+                rule = json.loads(ignore['compound'])
+                data = {   
+                    "type" : event.type.name.lower(), 
+                    "priority" : event.priority.name.lower(),
+                    "service" : event.service.name.lower(), 
+                    "message" : event.message
+                }
+                logging.debug("Rule: {0}".format(json.loads(ignore['compound'])))
+                logging.debug("Data: {0}".format(data))
+                result = jsonLogic(rule, data)                        
+                logging.debug("Result: {0}".format(result))
+                return result
+        except Exception as ex:
+            logging.error("Ignore config '{0}' error {1}".format(ignore, str(ex)))
+            traceback.print_exc()
+        return False
 
     @abstractmethod
     def send_events_to_user(self, events: List[Event]) -> bool:

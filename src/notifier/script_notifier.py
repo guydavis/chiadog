@@ -29,6 +29,9 @@ class ScriptNotifier(Notifier):
             return False
 
         for event in events:
+            if self.should_ignore_event(event):
+                logging.info("Ignoring Script notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 subprocess.run([str(self.script_path), event.priority.name, event.service.name, event.message])
 

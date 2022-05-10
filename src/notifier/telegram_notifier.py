@@ -22,6 +22,9 @@ class TelegramNotifier(Notifier):
     def send_events_to_user(self, events: List[Event]) -> bool:
         errors = False
         for event in events:
+            if self.should_ignore_event(event):
+                logging.info("Ignoring Telegram notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 request_body = json.dumps(
                     {

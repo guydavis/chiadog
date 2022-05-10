@@ -21,6 +21,9 @@ class DiscordNotifier(Notifier):
     def send_events_to_user(self, events: List[Event]) -> bool:
         errors = False
         for event in events:
+            if self.should_ignore_event(event):
+                logging.info("Ignoring Discord notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 o = urllib.parse.urlparse(self.webhook_url)
                 conn = http.client.HTTPSConnection(o.netloc, timeout=self._conn_timeout_seconds)

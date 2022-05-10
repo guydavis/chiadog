@@ -31,6 +31,9 @@ class GrafanaNotifier(Notifier):
     def send_events_to_user(self, events: List[Event]) -> bool:
         success = True
         for event in events:
+            if self.should_ignore_event(event):
+                logging.info("Ignoring Grafana notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 start, end, duration = self._get_time_range(event.message)
                 if (
