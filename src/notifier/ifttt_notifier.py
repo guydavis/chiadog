@@ -23,6 +23,9 @@ class IftttNotifier(Notifier):
     def send_events_to_user(self, events: List[Event]) -> bool:
         errors = False
         for event in events:
+            if self.should_ignore_event(event):
+                logging.info("Ignoring IFTTT notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 conn = http.client.HTTPSConnection("maker.ifttt.com:443", timeout=self._conn_timeout_seconds)
                 request_body = json.dumps({"Message": event.message, "Title": self.get_title_for_event(event)})

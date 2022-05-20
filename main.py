@@ -12,6 +12,7 @@ from typing import Tuple
 from src.chia_log.handlers.daily_stats.stats_manager import StatsManager
 from src.chia_log.log_consumer import create_log_consumer_from_config
 from src.chia_log.log_handler import LogHandler
+from src.chia_log.api_handler import ApiHandler
 from src.config import Config, is_win_platform
 from src.notifier.keep_alive_monitor import KeepAliveMonitor
 from src.notifier.notify_manager import NotifyManager
@@ -74,12 +75,16 @@ def init(config:Config):
     # Pipeline: Consume -> Handle -> Notify
     log_handler = LogHandler(log_consumer=log_consumer, notify_manager=notify_manager, stats_manager=stats_manager)
 
+    # Create an api endpoint to also receive events
+    api_handler = ApiHandler(notify_manager=notify_manager)
+
     def interrupt(signal_number, frame):
         if signal_number == signal.SIGINT:
             logging.info("Received interrupt. Stopping...")
             log_consumer.stop()
             keep_alive_monitor.stop()
             stats_manager.stop()
+            api_handler.stop_server()
             exit(0)
 
     signal.signal(signal.SIGINT, interrupt)
