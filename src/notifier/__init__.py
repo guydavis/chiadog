@@ -106,7 +106,8 @@ class Notifier(ABC):
         # Obviously if the Machinaris container (and thus all farming/harvesting) was just started, there will be a gap in the log... 
         if (self._program_launch_time + MINIMUM_LAUNCH_SECONDS_BEFORE_ALERTING_ABOUT_BEING_OFFLINE) >= time.time():
             if (event.service.name == 'HARVESTER' and event.message.startswith("Your harvester appears to be offline!")) or \
-                event.message.startswith("Experiencing networking issues?"):
+                event.message.startswith("Experiencing networking issues?") or \
+                event.message.startswith("Cha-ching!"):
                 return True
         # Next only ignore if user has set an "ignore" clause in config.xml for a particular Notifier
         if not "ignore" in self._config:
