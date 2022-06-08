@@ -25,6 +25,9 @@ class SlackNotifier(Notifier):
             if self.should_ignore_event(event):
                 logging.info("Ignoring Slack notificiation for event: {0}".format(event.message))
                 continue
+            elif not self.should_allow_event(event):
+                logging.info("Skip non-allowed Slack notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 request_body = json.dumps(
                     {
