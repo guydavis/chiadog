@@ -106,7 +106,8 @@ class Notifier(ABC):
         # Obviously if the Machinaris container (and thus all farming/harvesting) was just started, there will be a gap in the log... 
         if (self._program_launch_time + MINIMUM_LAUNCH_SECONDS_BEFORE_ALERTING_ABOUT_BEING_OFFLINE) >= time.time():
             if (event.service.name == 'HARVESTER' and event.message.startswith("Your harvester appears to be offline!")) or \
-                (event.service.name == 'FULL_NODE' and event.message.startswith("Experiencing networking issues?")):
+                event.message.startswith("Experiencing networking issues?") or \
+                event.message.startswith("Cha-ching!"):
                 return True
         # Next only ignore if user has set an "ignore" clause in config.xml for a particular Notifier
         if not "ignore" in self._config:
@@ -138,6 +139,40 @@ class Notifier(ABC):
                 return result
         except Exception as ex:
             logging.error("Ignore config '{0}' error {1}".format(ignore, str(ex)))
+            traceback.print_exc()
+        return False
+
+    def should_allow_event(self, event):
+        # Next only allow if user has set an "allow" clause in config.xml for a particular Notifier
+        if not "allow" in self._config:
+            return True  # By default allow all notifications if no "allow" filter is set
+        allow = self._config["allow"]
+        try:
+            # First check for one of type, priority, service, and message as a simple filter
+            if 'type' in allow and allow['type'] == event.type.name:
+                return True
+            if 'priority' in allow and allow['priority'] == event.priority.name:
+                return True
+            if 'service' in allow and allow['service'] == event.service.name:
+                return True
+            if 'message' in allow and re.search(allow['message'], event.message, re.M|re.I):
+                return True
+            # Then look for compound allow clause to invoke json logic
+            if 'compound' in allow:
+                rule = json.loads(allow['compound'])
+                data = {   
+                    "type" : event.type.name.lower(), 
+                    "priority" : event.priority.name.lower(),
+                    "service" : event.service.name.lower(), 
+                    "message" : event.message
+                }
+                logging.debug("Rule: {0}".format(json.loads(allow['compound'])))
+                logging.debug("Data: {0}".format(data))
+                result = jsonLogic(rule, data)                        
+                logging.debug("Result: {0}".format(result))
+                return result
+        except Exception as ex:
+            logging.error("Allow config '{0}' error {1}".format(allow, str(ex)))
             traceback.print_exc()
         return False
 

@@ -26,6 +26,9 @@ class PushcutNotifier(Notifier):
             if self.should_ignore_event(event):
                 logging.info("Ignoring Pushcut notificiation for event: {0}".format(event.message))
                 continue
+            elif not self.should_allow_event(event):
+                logging.info("Skip non-allowed Discord notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 conn = http.client.HTTPSConnection("api.pushcut.io:443", timeout=self._conn_timeout_seconds)
                 request_body = json.dumps({"text": event.message, "title": self.get_title_for_event(event)})

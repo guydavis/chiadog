@@ -27,7 +27,7 @@ class WalletAddedCoinParser:
         self._prefix = prefix
         self._regex = re.compile(
             r"([0-9:.]*) wallet (?:src|" + prefix + ").wallet.wallet_state_manager(?:\s?): "
-            r"INFO\s*Adding coin: {'amount': ([0-9]*),"
+            r"INFO\s*Adding.*coin: {'amount': ([0-9]*),"
         )
 
     def parse(self, logs: str) -> List[WalletAddedCoinMessage]:
@@ -40,7 +40,7 @@ class WalletAddedCoinParser:
         parsed_messages = []
         matches = self._regex.findall(logs)
         for match in matches:
-            # If Chives, we must multiply by 10,000 due to their fork choices
+            # If Chives (etc), we must multiply by 10,000 due to their fork choices
             mojos = int(match[1])
             if self._prefix == 'chives':
                 mojos = mojos * 10000
@@ -50,6 +50,7 @@ class WalletAddedCoinParser:
                 mojos = mojos * 1000000000
             elif self._prefix == 'stai':
                 mojos = mojos * 1000
+            logging.info("{0} received {1} at {2}".format(self._prefix, mojos, match[0]))
             parsed_messages.append(
                 WalletAddedCoinMessage(
                     timestamp=dateutil_parser.parse(match[0]),

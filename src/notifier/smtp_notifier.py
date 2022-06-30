@@ -35,6 +35,9 @@ class SMTPNotifier(Notifier):
             if self.should_ignore_event(event):
                 logging.info("Ignoring SMTP notificiation for event: {0}".format(event.message))
                 continue
+            elif not self.should_allow_event(event):
+                logging.info("Skip non-allowed SMTP notificiation for event: {0}".format(event.message))
+                continue
             if event.type in self._notification_types and event.service in self._notification_services:
                 subject = self.get_title_for_event(event)
                 text = event.message
