@@ -1,9 +1,11 @@
 # std
 import argparse
 import logging
+import os
 import signal
 import subprocess
 import time
+import traceback
 from argparse import Namespace, ArgumentParser
 from pathlib import Path
 from typing import Tuple
@@ -102,13 +104,11 @@ def init(config:Config):
 
 def version():
     try:
-        command_args = ["git", "describe", "--tags"]
-        f = subprocess.Popen(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = f.communicate()
-        return stdout.decode(encoding="utf-8").rstrip()
-    except:
-        return "unknown"
-
+        with open(os.path.join(os.getcwd(), 'VERSION')) as version_file:
+            return version_file.read().strip()
+    except Exception as ex:
+        logging.error(str(ex))
+    return "unknown"
 
 if __name__ == "__main__":
     # Parse config and configure logger
