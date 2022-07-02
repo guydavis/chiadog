@@ -73,7 +73,8 @@ def init(config:Config):
 
     # Link stuff up in the log handler
     # Pipeline: Consume -> Handle -> Notify
-    log_handler = LogHandler(log_consumer=log_consumer, notify_manager=notify_manager, stats_manager=stats_manager)
+    log_handler = LogHandler(config=config.get_handlers_config(), log_consumer=log_consumer, notify_manager=notify_manager,
+                             stats_manager=stats_manager)
 
     # Create an api endpoint to also receive events
     api_handler = ApiHandler(notify_manager=notify_manager)

@@ -68,7 +68,7 @@ class FileLogConsumer(LogConsumer):
         self._expanded_log_path = str(log_path.expanduser())
         logging.info(f"Enabled local file log consumer: {self._expanded_log_path}")
         self._offset_path = mkdtemp() / Config.get_log_offset_path()
-        logging.info(f"   with log offset file: {self._offset_path}")
+        logging.info(f"Using temporary directory {self._offset_path}")
         self._is_running = True
         self._thread = Thread(target=self._consume_loop)
         self._thread.start()
