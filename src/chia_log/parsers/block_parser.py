@@ -3,7 +3,7 @@ import re
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 # lib
 from dateutil import parser as dateutil_parser
@@ -24,10 +24,10 @@ class BlockParser:
     The chia config.yaml is usually under ~/.chia/mainnet/config/config.yaml
     """
 
-    def __init__(self, prefix):
+    def __init__(self, config: Optional[dict] = None):
         logging.info("Enabled parser for block found stats.")
         self._regex = re.compile(
-            r"([0-9:.]*) full_node (?:src|" + prefix + ").full_node.full_node\s*: INFO\s* ((?:🍀 |.)\s*Farmed unfinished_block)"
+            r"([0-9:.]*) full_node (?:src|" + config['prefix'] + ").full_node.full_node\s*: INFO\s* ((?:🍀 |.)\s*Farmed unfinished_block)"
         )
 
     def parse(self, logs: str) -> List[BlockMessage]:

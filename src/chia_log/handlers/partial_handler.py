@@ -21,7 +21,7 @@ class PartialHandler(LogHandlerInterface):
 
     def __init__(self, config: Optional[dict] = None):
         super().__init__(config)
-        self._parser = PartialParser()
+        self._parser = PartialParser(config)
         self._cond_checkers: List[PartialConditionChecker] = []
 
     def handle(self, logs: str, stats_manager: Optional[StatsManager] = None) -> List[Event]:

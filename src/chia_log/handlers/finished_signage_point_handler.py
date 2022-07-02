@@ -21,9 +21,9 @@ class FinishedSignagePointHandler(LogHandlerInterface):
     def config_name() -> str:
         return "finished_signage_point_handler"
 
-    def __init__(self, prefix, config: Optional[dict] = None):
+    def __init__(self, config: Optional[dict] = None):
         super().__init__(config)
-        self._parser = FinishedSignagePointParser(prefix)
+        self._parser = FinishedSignagePointParser(config)
         self._cond_checkers: List[FinishedSignageConditionChecker] = [NonSkippedSignagePoints()]
 
     def handle(self, logs: str, stats_manager: Optional[StatsManager] = None) -> List[Event]:

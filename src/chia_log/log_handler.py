@@ -19,7 +19,7 @@ def _check_handler_enabled(config: dict, handler_name: str) -> bool:
     try:
         return config[handler_name].get("enable", True)
     except KeyError as key:
-        logging.error(f"Invalid config.yaml. Missing key: {key}")
+        logging.debug(f"Invalid config.yaml. Missing key: {key}")
     return True
 
 
@@ -47,20 +47,26 @@ class LogHandler(LogConsumerSubscriber):
         self._notify_manager = notify_manager
         self._stats_manager = stats_manager
 
-        prefix = log_consumer.get_prefix()
-        symbol = log_consumer.get_coin_symbol()
         config = config or {}
         available_handlers: List[Type[LogHandlerInterface]] = [
-            HarvesterActivityHandler(prefix),
-            PartialHandler(),
-            BlockHandler(prefix),
-            FinishedSignagePointHandler(prefix),
-            WalletAddedCoinHandler(prefix, symbol),
+            HarvesterActivityHandler,
+            PartialHandler,
+            BlockHandler,
+            FinishedSignagePointHandler,
+            WalletAddedCoinHandler,
         ]
         self._handlers = []
         for handler in available_handlers:
             if _check_handler_enabled(config, handler.config_name()):
-                self._handlers.append(handler(config.get(handler.config_name())))
+                # With v0.7.1, upstream Chiadog project broke compatibility with old config.yamls
+                if handler.config_name() in config:
+                    handler_config = config.get()
+                else: # Just use a default config with enable=True
+                    handler_config = { 'enable': True }
+                # Always add in top-level configuration like blockchain prefix and symbol
+                handler_config['prefix'] = log_consumer.get_prefix()
+                handler_config['symbol'] = log_consumer.get_coin_symbol()
+                self._handlers.append(handler(handler_config))
             else:
                 logging.info(f"Disabled handler: {handler.config_name()}")
 

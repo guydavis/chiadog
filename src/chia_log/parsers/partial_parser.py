@@ -3,7 +3,7 @@ import re
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 # lib
 from dateutil import parser as dateutil_parser
@@ -24,9 +24,9 @@ class PartialParser:
     The chia config.yaml is usually under ~/.chia/mainnet/config/config.yaml
     """
 
-    def __init__(self):
+    def __init__(self, config: Optional[dict] = None):
         logging.info("Enabled parser for partial submitting stats.")
-        self._regex = re.compile(r"([0-9:.]*) farmer (?:src|chia).farmer.farmer\s*: INFO\s* (Submitting partial)")
+        self._regex = re.compile(r"([0-9:.]*) farmer (?:src|" + config['prefix'] + ").farmer.farmer\s*: INFO\s* (Submitting partial)")
 
     def parse(self, logs: str) -> List[PartialMessage]:
         """Parses all farmer activity messages from a bunch of logs

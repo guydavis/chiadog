@@ -21,9 +21,9 @@ class BlockHandler(LogHandlerInterface):
     def config_name() -> str:
         return "block_handler"
 
-    def __init__(self, prefix, config: Optional[dict] = None):
+    def __init__(self, config: Optional[dict] = None):
         super().__init__(config)
-        self._parser = BlockParser(prefix)
+        self._parser = BlockParser(config)
         self._cond_checkers: List[BlockConditionChecker] = [FoundBlocks()]
 
     def handle(self, logs: str, stats_manager: Optional[StatsManager] = None) -> List[Event]:

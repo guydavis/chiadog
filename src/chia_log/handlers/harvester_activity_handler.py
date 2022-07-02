@@ -24,9 +24,9 @@ class HarvesterActivityHandler(LogHandlerInterface):
     def config_name() -> str:
         return "harvester_activity_handler"
 
-    def __init__(self, prefix, config: Optional[dict] = None):
+    def __init__(self, config: Optional[dict] = None):
         super().__init__(config)
-        self._parser = HarvesterActivityParser(prefix)
+        self._parser = HarvesterActivityParser(config)
         self._cond_checkers: List[HarvesterConditionChecker] = [
             TimeSinceLastFarmEvent(),
             NonDecreasingPlots(),

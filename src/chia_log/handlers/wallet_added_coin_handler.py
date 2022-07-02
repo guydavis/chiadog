@@ -18,9 +18,9 @@ class WalletAddedCoinHandler(LogHandlerInterface):
     def config_name() -> str:
         return "wallet_added_coin_handler"
 
-    def __init__(self, prefix, config: Optional[dict] = None):
+    def __init__(self, config: Optional[dict] = None):
         super().__init__(config)
-        self._parser = WalletAddedCoinParser(prefix)
+        self._parser = WalletAddedCoinParser(config)
         config = config or {}
         self.min_mojos_amount = config.get("min_mojos_amount", 0)
         logging.info(f"Filtering transaction with mojos less than {self.min_mojos_amount}")
