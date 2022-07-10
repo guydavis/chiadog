@@ -1,16 +1,11 @@
-<p align="center">
-    <img src="./docs/logo.jpg" />
-</p>
-<p align="center">
-    Photo by <a href="https://unsplash.com/@tukacszoltan1984?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Zoltan Tukacs</a> on <a href="https://unsplash.com/s/photos/dog-grass?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
-</p>
 
---------------------------------------------------------------------
+Greetings! This project offers monitoring and alerting of Chia (and other forks) farms.  Designed to be **bundled** with the powerful [Machinaris](https://www.machinaris.app) plotting and farming tool, this fork of the [original Chiadog](https://github.com/martomi/chiadog) adds the following capabilities:
 
-# Watchdog for your Chia farm
+1. Monitoring of blockchain forks such as Flax, HDDCoin, Chives, etc.  Not just Chia!
+2. Enhanced configuration syntax to selectively allow or ignore alerts on each notifier.
+3. An API endpoint for other applications to send their alerts to the same Chiadog notification targets.
 
-So you've become a [Chia](https://www.chia.net) farmer and want to maximize the probability of getting a reward? Chiadog
-helps with automated monitoring and sends you a mobile notification in case something appears to malfunction.
+As such, please install [Machinaris](https://www.machinaris.app) to make use of this enhanced Chiadog version.  Thanks!
 
 ## Supported Notifications
 
