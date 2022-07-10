@@ -5,7 +5,7 @@ Greetings! This project offers monitoring and alerting of Chia (and other forks)
 2. Enhanced configuration syntax to selectively allow or ignore alerts on each notifier.
 3. An API endpoint for other applications to send their alerts to the same Chiadog notification targets.
 
-As such, please install [Machinaris](https://www.machinaris.app) to make use of this enhanced Chiadog version.  Thanks!
+The following documentation below is from the original Chiadog project.  Please ignore the installation steps for Chiadog as that is taken care of by simply installing [Machinaris](https://www.machinaris.app).  Thanks!
 
 ## Supported Notifications
 
