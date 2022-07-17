@@ -1,16 +1,11 @@
-<p align="center">
-    <img src="./docs/logo.jpg" />
-</p>
-<p align="center">
-    Photo by <a href="https://unsplash.com/@tukacszoltan1984?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Zoltan Tukacs</a> on <a href="https://unsplash.com/s/photos/dog-grass?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
-</p>
 
---------------------------------------------------------------------
+Greetings! This project offers monitoring and alerting of Chia (and other forks) farms.  Designed to be **bundled** with the powerful [Machinaris](https://www.machinaris.app) plotting and farming tool, this fork of the [original Chiadog](https://github.com/martomi/chiadog) adds the following capabilities:
 
-# Watchdog for your Chia farm
+1. Monitoring of blockchain forks such as Flax, HDDCoin, Chives, etc.  Not just Chia!
+2. Enhanced configuration syntax to selectively allow or ignore alerts on each notifier.
+3. An API endpoint for other applications to send their alerts to the same Chiadog notification targets.
 
-So you've become a [Chia](https://www.chia.net) farmer and want to maximize the probability of getting a reward? Chiadog
-helps with automated monitoring and sends you a mobile notification in case something appears to malfunction.
+The following documentation below is from the original Chiadog project.  Please ignore the installation steps for Chiadog as that is taken care of by simply installing [Machinaris](https://www.machinaris.app).  Thanks!
 
 ## Supported Notifications
 
@@ -18,6 +13,7 @@ helps with automated monitoring and sends you a mobile notification in case some
 | ------------- | ------------- | ------|
 | Harvester | Your harvester appears to be offline! No events for the past 400 seconds. | HIGH |
 | Harvester | Disconnected HDD? The total plot count decreased from 100 to 40. | HIGH |
+| Harvester | Connected HDD? The total plot count increased from 0 to 42. | LOW |
 | Harvester | Experiencing networking issues? Harvester did not participate in any challenge for 120 seconds. It's now working again. | NORMAL |
 | Harvester | Seeking plots took too long: 21.42 seconds! | NORMAL |
 | Full Node | Experiencing networking issues? Skipped 42 signage points! | NORMAL |
@@ -37,7 +33,7 @@ one of your external HDDs disconnected and your harvester doesn't have access to
 ## Access & Security
 
 It only requires read-access to your `debug.log` file and internet connection to send out notifications. It's highly
-recommended that you run `chiadog` in a sandboxed environment - this is described in the advanced section below.
+recommended that you run `chiadog` in a sandboxed environment. Please use the official [docker image](https://github.com/martomi/chiadog/pkgs/container/chiadog/versions).
 
 Furthermore, following best security practices, you
 should [keep your wallet separate](https://github.com/Chia-Network/chia-blockchain/wiki/Good-Security-Practices-on-Many-Machines#keep-your-wallet-separate).
@@ -49,6 +45,7 @@ You may use one (or more) of the following integrations to receive notifications
 | Integration | Advantages | Cost |
 | ------------- | ------------- | ------|
 | [Pushover](https://pushover.net/) | High priority notifications that can override your phone's silent mode. | $5 one time purchase after 30 day trial. |
+| [Pushcut](https://pushcut.io/) | Alternative to Pushover |
 | E-mail | You probably already have an email. No additional apps. | Free |
 | Slack | Quick & easy setup. | Free |
 | Discord | Quick & easy setup. | Free |
@@ -56,6 +53,8 @@ You may use one (or more) of the following integrations to receive notifications
 | Shell script (beta) | Execute anything in your own script. | Free |
 | MQTT | Well-suited for Home Automation. | Free | 
 | Grafana | For hardware monitoring. | Free |
+| [Ifttt](https://ifttt.com/) | Can be used to send push notifications or to do other API integrations depending on incoming data. | Free |
+
 
 For detailed guide on how to test and configure, please refer to [INTEGRATIONS.md](INTEGRATIONS.md).
 
@@ -94,6 +93,12 @@ cat ~/.chia/mainnet/log/debug.log
 
 ## Installation
 
+### Recommended
+
+The new recommended way of using `chiadog` is via the official [docker image](https://github.com/martomi/chiadog/pkgs/container/chiadog/versions).
+
+### Manual Installation
+
 _For updating from previous version, see section below._
 
 1. Clone the repository
@@ -117,7 +122,7 @@ cp config-example.yaml config.yaml
 
 4. Open up `config.yaml` in your editor and configure it to your preferences.
 
-## Updating to the latest release
+### Updating to the latest release
 
 _Skip this if you followed the above section_.
 
@@ -172,8 +177,7 @@ keep-alive event from the harvester.
 ## Redundant monitoring for `chiadog`
 
 There are failure-cases in which `chiadog` is helpless. For example, your computer completely freezes or shuts down.
-Perhaps your entire home network goes down.
-`chiadog` won't be able to send you a notification.
+Perhaps your entire home network goes down. `chiadog` won't be able to send you a notification.
 
 There's a way however: in the [config](config-example.yaml) under the section of `keep_alive_monitor`, you can enable
 pinging to a remote service that will act as a watchdog of `chiadog`. A second level of redundancy, if you wish!
@@ -192,15 +196,10 @@ nohup python3 -u main.py --config config.yaml > output.log 2>&1 &
 To stop chiadog, you can find the Process ID (PID) via `ps aux | grep main.py` and then softly interrupt the process
 with `kill -SIGINT <pid_here>`.
 
-## Running `chiadog` in sandboxed environment
+## Running `chiadog` as sandboxed systemd service
 
-We're in the early stages of exploring the best way to provide easy to setup sandboxed environment where the `chiadog`
-process is completely isolated from potentially accessing your private keys. Contributions in that direction are very
-welcome. Meanwhile you can check out @ajacobson repository
-for [chiadog-docker](https://github.com/ajacobson/chiadog-docker).
-
-Alternatively, [as suggested here](https://github.com/martomi/chiadog/issues/24) you can run `chiadog` from a unix user
-with limited permissions.
+Alternatively to the original chiadog docker image, you can setup a [systemd service](scripts/linux/chiadog.service)
+which runs chiadog as a limited user and blocks access to key chia locations.
 
 # Contributing
 

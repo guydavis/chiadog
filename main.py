@@ -1,9 +1,11 @@
 # std
 import argparse
 import logging
+import os
 import signal
 import subprocess
 import time
+import traceback
 from argparse import Namespace, ArgumentParser
 from pathlib import Path
 from typing import Tuple
@@ -73,7 +75,8 @@ def init(config:Config):
 
     # Link stuff up in the log handler
     # Pipeline: Consume -> Handle -> Notify
-    log_handler = LogHandler(log_consumer=log_consumer, notify_manager=notify_manager, stats_manager=stats_manager)
+    log_handler = LogHandler(config=config.get_handlers_config(), log_consumer=log_consumer, notify_manager=notify_manager,
+                             stats_manager=stats_manager)
 
     # Create an api endpoint to also receive events
     api_handler = ApiHandler(notify_manager=notify_manager)
@@ -101,13 +104,11 @@ def init(config:Config):
 
 def version():
     try:
-        command_args = ["git", "describe", "--tags"]
-        f = subprocess.Popen(command_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = f.communicate()
-        return stdout.decode(encoding="utf-8").rstrip()
-    except:
-        return "unknown"
-
+        with open(os.path.join(os.getcwd(), 'VERSION')) as version_file:
+            return version_file.read().strip()
+    except Exception as ex:
+        logging.error(str(ex))
+    return "unknown"
 
 if __name__ == "__main__":
     # Parse config and configure logger
