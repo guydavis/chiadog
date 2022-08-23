@@ -46,7 +46,7 @@ class WalletAddedCoinParser:
                 mojos = mojos * 10000
             elif self._prefix == 'cryptodoge':
                 mojos = mojos * 1000000
-            elif self._prefix == 'shibgreen':
+            elif self._prefix == 'shibgreen' or self._prefix == 'littlelambocoin':
                 mojos = mojos * 1000000000
             elif self._prefix == 'stai':
                 mojos = mojos * 1000
