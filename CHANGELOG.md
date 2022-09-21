@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.7.3] - 2022-08-26
+
+### Fixed
+- Fixed wallet parser for Chia v1.5.1+ - thanks [@djerfy](https://github.com/djerfy)!
+
 ## [0.7.2] - 2022-07-04
 
 ### Fixed
