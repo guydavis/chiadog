@@ -26,7 +26,7 @@ class PartialParser:
 
     def __init__(self, config: Optional[dict] = None):
         logging.info("Enabled parser for partial submitting stats.")
-        self._regex = re.compile(r"([0-9:.]*) farmer (?:src|" + config['prefix'] + ").farmer.farmer\s*: INFO\s* (Submitting partial)")
+        self._regex = re.compile(r"([0-9:.T-]*) farmer (?:src|" + config['prefix'] + ").farmer.farmer\s*: INFO\s* (Submitting partial)")
 
     def parse(self, logs: str) -> List[PartialMessage]:
         """Parses all farmer activity messages from a bunch of logs

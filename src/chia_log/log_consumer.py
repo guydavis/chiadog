@@ -69,6 +69,10 @@ class FileLogConsumer(LogConsumer):
         logging.info(f"Enabled local file log consumer: {self._expanded_log_path}")
         self._offset_path = mkdtemp() / Config.get_log_offset_path()
         logging.info(f"Using temporary directory {self._offset_path}")
+        # Cleanup stale temporary file
+        if self._offset_path.exists():
+            logging.info(f"Deleting stale log offset file: {self._offset_path}")
+            self._offset_path.unlink()
         self._is_running = True
         self._thread = Thread(target=self._consume_loop)
         self._thread.start()
@@ -78,11 +82,10 @@ class FileLogConsumer(LogConsumer):
     def stop(self):
         logging.info("Stopping")
 
-        # Why were original authors throwing away the offset file on every stop?
         # Cleanup the temporary file
-        #if self._offset_path.exists():
-        #    logging.info(f"Deleting {self._offset_path}")
-        #    self._offset_path.unlink()
+        if self._offset_path.exists():
+            logging.info(f"Deleting {self._offset_path}")
+            self._offset_path.unlink()
 
         self._is_running = False
 
