@@ -7,6 +7,11 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.7.4] - 2022-11-02
+
+### Fixed
+- Bumped `paramiko` dependency to latest version (2.11.0) to fix a deprecation warning
+
 ## [0.7.3] - 2022-08-26
 
 ### Fixed
