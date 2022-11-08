@@ -26,8 +26,8 @@ class WalletAddedCoinParser:
         logging.info("Enabled parser for wallet activity - added coins.")
         self._prefix = config['prefix']
         self._regex = re.compile(
-            r"([0-9:.T-]*) wallet (?:src|" + self._prefix + ").wallet.wallet_state_manager(?:\s?): "
-            r"INFO\s*Adding.*coin:.*'?amount'?: ([0-9]*)"
+            r"([0-9:.T-]*) wallet (?:src|" + self._prefix + ").wallet.wallet_(?:state_manager|node).*"
+            r"INFO\s*(?:Adding|Adding record to state manager|request) coin:.*'?amount'?: ([0-9]*)"
         )
 
     def parse(self, logs: str) -> List[WalletAddedCoinMessage]:
