@@ -102,6 +102,8 @@ class Notifier(ABC):
         return f"{icon} {self._title_prefix} {event.service.name}"
 
     def should_ignore_event(self, event):
+        if event.message and event.message.startswith('Test alert'):
+            return False  # Never ignore the 'Test alert' message trigged from Machinaris WebUI when testing configs
         # Automatically ignore Chiadog's spurious "Your harvester appears to be offline!" alerts immediately after a relaunch of container
         # Obviously if the Machinaris container (and thus all farming/harvesting) was just started, there will be a gap in the log... 
         if (self._program_launch_time + MINIMUM_LAUNCH_SECONDS_BEFORE_ALERTING_ABOUT_BEING_OFFLINE) >= time.time():
