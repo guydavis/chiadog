@@ -237,7 +237,11 @@ The purpose of this minor release is to get out a few fixes. No new features in 
 - Adds basic condition checks for harvester operations.
 - Adds integration for Pushover (mobile notifications).
 
-[Unreleased]: https://github.com/martomi/chiadog/compare/v0.7.2...main
+[Unreleased]: https://github.com/martomi/chiadog/compare/v0.7.4...main
+
+[0.7.4]: https://github.com/martomi/chiadog/compare/v0.7.3...v0.7.4
+
+[0.7.3]: https://github.com/martomi/chiadog/compare/v0.7.2...v0.7.3
 
 [0.7.2]: https://github.com/martomi/chiadog/compare/v0.7.1...v0.7.2
 
