@@ -50,6 +50,8 @@ class WalletAddedCoinParser:
                 mojos = mojos * 1000000000
             elif self._prefix == 'stai':
                 mojos = mojos * 1000
+            elif self._prefix == 'achi':
+                mojos = mojos * 1000                
             logging.info("{0} received {1} at {2}".format(self._prefix, mojos, match[0]))
             parsed_messages.append(
                 WalletAddedCoinMessage(
