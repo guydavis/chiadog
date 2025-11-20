@@ -14,9 +14,10 @@ class HarvesterActivityMessage:
     """Parsed information from harvester logs"""
 
     timestamp: datetime
-    eligible_plots_count: int
     challenge_hash: str
+    eligible_plots_count: int
     found_proofs_count: int
+    found_qualities_count: int
     search_time_seconds: float
     total_plots_count: int
 
@@ -31,9 +32,9 @@ class HarvesterActivityParser:
     def __init__(self, config: Optional[dict] = None):
         logging.info("Enabled parser for harvester activity - eligible plot events.")
         self._regex = re.compile(
-            r"([0-9:.T-]*) harvester (?:src|" + config['prefix'] + ").harvester.harvester(?:\s?): INFO\s*([0-9]+) plots were "
-            r"eligible for farming ([0-9a-z.]*) Found ([0-9]) proofs. Time: ([0-9.]*) s. "
-            r"Total ([0-9]*) plots"
+            r"([0-9:.]*)(?:\s[0-9:.]*)? harvester (?:src|" + config['prefix'] + ").harvester.harvester(?:\s?): INFO\s*challenge_hash: "
+            r"([0-9a-z.]*) ...([0-9]+) plots were eligible for farming challengeFound ([0-9]+) V1 proofs and ([0-9]+) V2 qualities. "
+            r"Time: ([0-9.]*) s. Total ([0-9]*) plots"
         )
 
     def parse(self, logs: str) -> List[HarvesterActivityMessage]:
@@ -49,11 +50,12 @@ class HarvesterActivityParser:
             parsed_messages.append(
                 HarvesterActivityMessage(
                     timestamp=dateutil_parser.parse(match[0]),
-                    eligible_plots_count=int(match[1]),
-                    challenge_hash=match[2],
+                    challenge_hash=match[1],
+                    eligible_plots_count=int(match[2]),
                     found_proofs_count=int(match[3]),
-                    search_time_seconds=float(match[4]),
-                    total_plots_count=int(match[5]),
+                    found_qualities_count=int(match[4]),
+                    search_time_seconds=float(match[5]),
+                    total_plots_count=int(match[6]),
                 )
             )
 
